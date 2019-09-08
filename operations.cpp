@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <iomanip>
+#include <cmath>
 #include "operations.h"
 using namespace std;
 
@@ -136,3 +137,37 @@ vector<vector<int>> transposedMatrix(vector<vector<int>> m){
   return mt;
 }
 
+vector<vector<int>> minorMatrix(vector<vector<int>> m, int r, int c){
+  int a = m[0].size();
+  int b = m.size();
+  if(a != b){
+    cout << "Only for square matrix" << endl;
+    return m;
+  }else{
+    for(int i = 0; i < a; i++){
+      m[i].erase(m[i].begin()+(c-1));
+    }
+    m.erase(m.begin()+(r-1));
+  }
+  return m;
+}
+
+int matrixDeterminant(vector<vector<int>> m){
+  int a = m[0].size();
+  int b = m.size();
+  int d = 0;
+  if(a == 2 && b == 2){
+    return m[0][0]*m[1][1] - m[1][0]*m[0][1];
+  }else{
+    for(int i = 0; i < a; i++){
+      d += m[0][i] * cofactorMatrix(m,1,i+1);
+    }
+    return d;
+  }
+}
+
+int cofactorMatrix(vector<vector<int>> m, int r, int c){
+  int cof;
+  cof = pow(-1,(r+1+c+1))*matrixDeterminant(minorMatrix(m,r,c));
+  return cof;
+}

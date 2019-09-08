@@ -11,5 +11,8 @@ vector<vector<int>> subMatrix(vector<vector<int>> a, vector<vector<int>> b);
 vector<vector<int>> scaleMatrix(vector<vector<int>> m, int e);
 vector<vector<int>> multMatrix(vector<vector<int>> a, vector<vector<int>> b);
 vector<vector<int>> transposedMatrix(vector<vector<int>> m);
+vector<vector<int>> minorMatrix(vector<vector<int>> m, int r, int c);
+int matrixDeterminant(vector<vector<int>> m);
+int cofactorMatrix(vector<vector<int>> m, int r, int c);
 
 #endif
