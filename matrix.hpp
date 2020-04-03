@@ -5,6 +5,7 @@
 #include <vector>
 #include <stdexcept>
 #include <cmath>
+#include "racional.hpp"
 using namespace std;
 
 class Matrix{
@@ -28,24 +29,25 @@ public:
 	bool is_diagonal();
 	bool is_superior_triangular();
 	bool is_inferior_triangular();
-	bool is_triangular();
-	bool is_null();//
-	bool is_identity();//
-	bool is_invertible();//
-	bool is_symmetrical();//
+	bool is_triangular();	
+	bool is_null();
+	bool is_identity();
+	bool is_invertible();
+	bool is_symmetrical();
 
 
-	vector<double> solve_system();//
-	double determinant();//
-	double trace();//
+	Matrix solve_system(); //Only for squared matrices for now
+	double determinant();
+	double trace();
 	void extend(bool homogeneus);
 	vector<double> multiply_row(int row, double a);//
 	vector<double> multiply_column(int column, double a);//
 	void sum_rows(int row_1, int row_2, double a);//
-	Matrix find_inverse();//
-	Matrix transpose();//
-	Matrix minor_matrix(int row, int column);//
-	Matrix cofactor(int row, int column);//
+	Matrix inverse();
+	Matrix transpose();
+	Matrix minor_matrix(int row, int column);
+	double cofactor(int row, int column);
+	Matrix adj();
 
 	//Operators
 	Matrix operator+(const Matrix &m);

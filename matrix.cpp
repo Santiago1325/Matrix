@@ -177,6 +177,108 @@ bool Matrix::is_identity(){
 	return true;
 }
 
+bool Matrix::is_symmetrical(){
+	return *this == transpose();
+}
+
+bool Matrix::is_invertible(){
+	if(is_squared()){
+		return determinant() != 0;
+	}else{
+		return false;
+	}
+}
+
+Matrix Matrix::transpose(){
+	Matrix b(columns, rows, false);
+	for(int i = 0; i < rows; i++){
+		for(int j = 0; j < columns; j++){
+			b.a[j][i] = a[i][j];
+		}
+	}
+	return b;
+}
+
+Matrix Matrix::minor_matrix(int row, int column){
+	Matrix b = *this;
+	b.a.erase(b.a.begin()+row-1);
+	b.rows -= 1;
+	for(int i = 0; i < b.rows; i++){
+		b.a[i].erase(b.a[i].begin()+column-1);
+	} 
+	b.columns -= 1;
+	return b;
+}
+
+double Matrix::determinant(){
+	double det = 0;
+	if(rows != columns){
+		throw runtime_error("determinant: Only for squared matrices");
+	}
+	if(rows == 2 && columns == 2){
+		return a[0][0]*a[1][1] - a[0][1]*a[1][0];
+	}else{
+		for(int i = 0; i < rows; i++){
+			det += a[0][i]*cofactor(1,i+1);
+		}
+		return det;
+	}
+}
+
+double Matrix::cofactor(int row, int column){
+	double cof = pow(-1,row+column)*minor_matrix(row,column).determinant();
+	return cof;
+}
+
+Matrix Matrix::adj(){
+	if(rows != columns){
+		throw runtime_error("adj: Only for squared matrices");
+	}
+	Matrix ad(rows, columns, false);
+	for(int i = 0; i < rows; i++){
+		for(int j = 0; j < columns; j++){
+			ad.a[i][j] = cofactor(i+1,j+1);
+		}
+	}
+	return ad;
+}
+
+Matrix Matrix::inverse(){
+	if(!is_invertible()){
+		throw runtime_error("find_inverse: Matrix is not invertible");
+	}
+	Matrix ad = adj();
+	Matrix ad_t = ad.transpose();
+	Matrix inv = ad_t*(1.0/determinant());
+	return inv;
+}
+
+double Matrix::trace(){
+	if(!is_squared()){
+		throw runtime_error("trace: Matrix is not squared");
+	}
+	double t = 0;
+	for(int i = 0; i < rows; i++){
+		t += a[i][i];
+	}
+	return t;
+}
+
+Matrix Matrix::solve_system(){
+	if(extended){
+		if(is_squared()){
+			Matrix c(columns, 1, false);
+			for(int i = 0; i < columns; i++){
+				c.a[i][0] = b[i];
+			}
+			Matrix sol = inverse()*c;
+			return sol;
+		}
+	}else{
+		throw runtime_error("solve_system: Matrix is not extended");
+	}	
+}
+
 //Operators
 ostream& operator<<(ostream& out, const Matrix& m){
 	for(int i = 0; i < m.rows; i++){
